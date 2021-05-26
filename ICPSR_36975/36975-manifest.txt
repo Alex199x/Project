@@ -1,0 +1,256 @@
+File Manifest for ICPSR 36975
+
+Fischer, Claude S. UC Berkeley Social Networks Study (UCNets), San
+Francisco Bay Area, 2015-2018. ICPSR36975-v2. Ann Arbor, MI: Inter-
+university Consortium for Political and Social Research [distributor],
+2020-07-22. http://doi.org/10.3886/ICPSR36975.v2
+
+Details on the version history can be found below the file listings.
+
+
+Study-level Documentation
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-descriptioncitation.pdf       -       -         -       2020-07-22  -
+
+    36975-related_literature.txt        -       -         -       daily       -
+
+    36975-manifest.txt                  -       -         -       daily       -
+
+    36975-Codebook-PI.pdf               -       -         -       2020-07-22  9c1219eb03ddd3a1ab5216ebdf02081d
+
+    36975-Documentation.pdf             -       -         -       2020-07-22  c6b27e38cdbdc6f3e7768635b0d0781a
+
+    36975-User_guide.pdf                -       -         -       2020-07-22  c447a06fa4c559a6ada4204bafdf2dc4
+
+
+DS0001 Alters Wave 1 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0001-Codebook-ICPSR.pdf       -       -         -       2020-07-22  bfc266b6b5ae85d3a267c050c2096178
+
+    36975-0001-Data.dta                 -       20,313    71      2020-07-22  0fd3aa2585a40677c1aa87943b2fccca
+
+    36975-0001-Data.rda                 -       20,313    71      2020-07-22  af666cbf73f8cf454c020248eacb01a5
+
+    36975-0001-Data.sav                 -       20,313    71      2020-07-22  3b3ce122fe0ab60316a30dae86b37327
+
+    36975-0001-Data.stc                 -       20,313    71      2020-07-22  1b1afef63a18fa54a62e1943d5df270d
+
+    36975-0001-Data.tsv                 -       20,313    71      2020-07-22  e8abbd1a72f33bd961bdab6543b8bc18
+
+    36975-0001-Data.txt                 114     20,313    71      2020-07-22  ede22c35e96a11c308d96279567d7414
+
+    36975-0001-Setup.dct                -       -         -       2020-07-22  e28f771976618072888a09ec1ccdb4fd
+
+    36975-0001-Setup.do                 -       -         -       2020-07-22  d2068fd4ba4a448c4260d40879429e97
+
+    36975-0001-Setup.sas                -       -         -       2020-07-22  c5231eb5683c0e42d8f140f3ee547e3c
+
+    36975-0001-Setup.sps                -       -         -       2020-07-22  e2e1a352f350e728186b27da3717b3ab
+
+
+DS0002 Alters Wave 2 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0002-Codebook-ICPSR.pdf       -       -         -       2020-07-22  1b98920a3c54eb6f5597970635141159
+
+    36975-0002-Data.dta                 -       20,313    73      2020-07-22  a52eb9c98b0b404aeff613cc7a815410
+
+    36975-0002-Data.rda                 -       20,313    73      2020-07-22  07002b1ffa36983cfd21e9dffd659616
+
+    36975-0002-Data.sav                 -       20,313    73      2020-07-22  a449f1e73615f546d9c372f73ffb3861
+
+    36975-0002-Data.stc                 -       20,313    73      2020-07-22  cde70bb3faa2e5bb87cf121eaf410ffa
+
+    36975-0002-Data.tsv                 -       20,313    73      2020-07-22  dff193d545a5ff010d42b91421ff2de0
+
+    36975-0002-Data.txt                 122     20,313    73      2020-07-22  3f8abfd9100b7a7c15e8798089d17e47
+
+    36975-0002-Setup.dct                -       -         -       2020-07-22  6adb5651c4648379a129b5009cbe5d9d
+
+    36975-0002-Setup.do                 -       -         -       2020-07-22  0c7f42384407b8d2e4b784c5b4942ce1
+
+    36975-0002-Setup.sas                -       -         -       2020-07-22  54a37f9e79ba53f5a81d08d9d9960d5f
+
+    36975-0002-Setup.sps                -       -         -       2020-07-22  24576db114e99348d7ac3bd92d70039d
+
+
+DS0003 Alters Wave 3 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0003-Codebook-ICPSR.pdf       -       -         -       2020-07-22  b907edfb10be075a92964674a30fc097
+
+    36975-0003-Data.dta                 -       20,313    82      2020-07-22  2fbd82c1488f79768a684686b4d6d456
+
+    36975-0003-Data.rda                 -       20,313    82      2020-07-22  4e4b29ae5079a344969c4bd9ccca6e66
+
+    36975-0003-Data.sav                 -       20,313    82      2020-07-22  325c3c5b9db728c97c7e8b67eadbcbc6
+
+    36975-0003-Data.stc                 -       20,313    82      2020-07-22  4d346ecbde6c1a4671ef24d9c8e87059
+
+    36975-0003-Data.tsv                 -       20,313    82      2020-07-22  5ceb8ae902bef8af509961636abf9e36
+
+    36975-0003-Data.txt                 143     20,313    82      2020-07-22  768bfa936c2bd68d9cf9826756bfc2ab
+
+    36975-0003-Setup.dct                -       -         -       2020-07-22  84159b2d0c2a2103b29ce656a01c09cf
+
+    36975-0003-Setup.do                 -       -         -       2020-07-22  7e42a885b485c855fc010c0a2e615602
+
+    36975-0003-Setup.sas                -       -         -       2020-07-22  bf544803c45b8636860b6433ddbb9ca6
+
+    36975-0003-Setup.sps                -       -         -       2020-07-22  873159c2966700d84f8ce33c843d9671
+
+
+DS0004 Alters Combined Waves Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0004-Codebook-ICPSR.pdf       -       -         -       2020-07-22  894307128738699783df4f6320869f6b
+
+    36975-0004-Data.dta                 -       20,313    222     2020-07-22  579e04cd757c573dfba0ffe2d3b458c9
+
+    36975-0004-Data.rda                 -       20,313    222     2020-07-22  7665ed72a4aa5ec24ad091c4479d192f
+
+    36975-0004-Data.sav                 -       20,313    222     2020-07-22  de48729c7c4b443454be0124e5d0f73e
+
+    36975-0004-Data.stc                 -       20,313    222     2020-07-22  78f7c6095d4460b46887732c3eb03fbd
+
+    36975-0004-Data.tsv                 -       20,313    222     2020-07-22  a6cc30f105ac601ab9c49ccb61be279d
+
+    36975-0004-Data.txt                 323     20,313    222     2020-07-22  a6635b8d2d31954edf50a7e84b2fd8ef
+
+    36975-0004-Setup.dct                -       -         -       2020-07-22  d9c786c8cb00bf319d0c29bbc2f957d8
+
+    36975-0004-Setup.do                 -       -         -       2020-07-22  29993a70fc796ff65440a9968011aa74
+
+    36975-0004-Setup.sas                -       -         -       2020-07-22  3dae90102bd6047729ac25ce155bec59
+
+    36975-0004-Setup.sps                -       -         -       2020-07-22  de3c7fd15421fcc483705aa72a74e0e1
+
+
+DS0005 Ego Wave 1 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0005-Codebook-ICPSR.pdf       -       -         -       2020-07-22  6a1469d11257be63fe5efe36bdd73c43
+
+    36975-0005-Data.dta                 -       1,159     555     2020-07-22  228dcd42d44ba56e7fa2342ae6b7529e
+
+    36975-0005-Data.rda                 -       1,159     555     2020-07-22  6e1815de27d64378bce21c0ec025e746
+
+    36975-0005-Data.sav                 -       1,159     555     2020-07-22  499c84218bb35358e41cfe4396d42deb
+
+    36975-0005-Data.stc                 -       1,159     555     2020-07-22  2a61b485d3096c1bdcdbb3eb0ee4bb19
+
+    36975-0005-Data.tsv                 -       1,159     555     2020-07-22  a1b8f7742b0b292f17786702b1b99970
+
+    36975-0005-Data.txt                 2202    1,159     555     2020-07-22  f60e6504f59f236e2114a17a38b0d056
+
+    36975-0005-Setup.dct                -       -         -       2020-07-22  a7a115ca453e1ec7434bbab1af343a13
+
+    36975-0005-Setup.do                 -       -         -       2020-07-22  f42318422f7dda0149c7ade7554bb162
+
+    36975-0005-Setup.sas                -       -         -       2020-07-22  28a25b614c2d7f90aa2c2e98193bda59
+
+    36975-0005-Setup.sps                -       -         -       2020-07-22  8c22aee4abcfd5db63234da8b83e9d91
+
+
+DS0006 Ego Wave 2 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0006-Codebook-ICPSR.pdf       -       -         -       2020-07-22  90f5eebf0df29aec1b4be52f658b5b6c
+
+    36975-0006-Data.dta                 -       1,159     425     2020-07-22  44e882257e958bc6ff53f52e5ece775e
+
+    36975-0006-Data.rda                 -       1,159     425     2020-07-22  664f00282d6bb22edfde606a523f655d
+
+    36975-0006-Data.sav                 -       1,159     425     2020-07-22  c4282225f0da85a132aa35dbbf055e3a
+
+    36975-0006-Data.stc                 -       1,159     425     2020-07-22  b277af7efbd356926ebec69737dfabe6
+
+    36975-0006-Data.tsv                 -       1,159     425     2020-07-22  8ec69e3e576cc36fa359cbfd2f278d32
+
+    36975-0006-Data.txt                 1419    1,159     425     2020-07-22  d17cdfd726733f5299f8ce441a573d6f
+
+    36975-0006-Setup.dct                -       -         -       2020-07-22  8f6a18d9988082be013993f4a8d06f92
+
+    36975-0006-Setup.do                 -       -         -       2020-07-22  6fceb05daeaf35b528a3f73908871a8f
+
+    36975-0006-Setup.sas                -       -         -       2020-07-22  5e68f90b5dd579033f780eaa91c772f7
+
+    36975-0006-Setup.sps                -       -         -       2020-07-22  0e711e987867072b68d3121900bb59b3
+
+
+DS0007 Ego Wave 3 Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0007-Codebook-ICPSR.pdf       -       -         -       2020-07-22  36c8dd7f27462039a5770a90fe0f4402
+
+    36975-0007-Data.dta                 -       1,159     439     2020-07-22  54e6414aadd935b1257c5dce379f674e
+
+    36975-0007-Data.rda                 -       1,159     439     2020-07-22  6654c6d77663ed957033a7a3d216c802
+
+    36975-0007-Data.sav                 -       1,159     439     2020-07-22  93bd06cbabf612682be29d26c339d13d
+
+    36975-0007-Data.stc                 -       1,159     439     2020-07-22  da37c5525638c11519ba9a54a6d1ee51
+
+    36975-0007-Data.tsv                 -       1,159     439     2020-07-22  3b4aa36e3eaa67e5403ec5cfdb5ccf3d
+
+    36975-0007-Data.txt                 1333    1,159     439     2020-07-22  8e9c6bf4c87b708b49008df81396d6d8
+
+    36975-0007-Setup.dct                -       -         -       2020-07-22  8512da848990d8d281fdf3d85f9d92ab
+
+    36975-0007-Setup.do                 -       -         -       2020-07-22  8ef70024635a944927482dde6156e772
+
+    36975-0007-Setup.sas                -       -         -       2020-07-22  34972bd1d775f39de43b092a73a4af80
+
+    36975-0007-Setup.sps                -       -         -       2020-07-22  3a81ec3ae38768f5dc208708e31bc9c1
+
+
+DS0008 Ego Combined Waves Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    36975-0008-Codebook-ICPSR.pdf       -       -         -       2020-07-22  2c890babe6582c250f8b25001a5c2f45
+
+    36975-0008-Data.dta                 -       1,159     1415    2020-07-22  ba11fca91003f5ff0c1c13af919413ad
+
+    36975-0008-Data.rda                 -       1,159     1415    2020-07-22  501e92443710a40d42831edb0eda50d5
+
+    36975-0008-Data.sav                 -       1,159     1415    2020-07-22  ef145d18e8ec4275a7b79052a2babc5f
+
+    36975-0008-Data.stc                 -       1,159     1415    2020-07-22  a4cadc8c3f3d4b8bc911c792179712be
+
+    36975-0008-Data.tsv                 -       1,159     1415    2020-07-22  55600b72d21945db308bacda835c086c
+
+    36975-0008-Data.txt                 4898    1,159     1415    2020-07-22  a62d5b48491dcddfaca1c2eaffda0de7
+
+    36975-0008-Setup.dct                -       -         -       2020-07-22  be130050fbb9fd9fb36ba5763db4bcb1
+
+    36975-0008-Setup.do                 -       -         -       2020-07-22  d34dd6cb1730a70354cb83c48f52e13c
+
+    36975-0008-Setup.sas                -       -         -       2020-07-22  694c499e4c9822f91e8a0029abc9a51b
+
+    36975-0008-Setup.sps                -       -         -       2020-07-22  97bac4d5275ef19890ec4e4e56bc7576
+
+
+Version History
+
+2020-07-22 This update includes the addition of new waves of data and an
+updated wave 1 data set. New and updated documentation has also been added.
