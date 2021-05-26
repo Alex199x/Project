@@ -1,0 +1,34 @@
+---
+title: "Project"
+author: "Haotian Guo"
+date: "2021/5/21"
+output: html_document
+---
+```{r}
+library(statnet)
+library(ergmharris)
+library(network)
+library(sna)
+library(ergm)
+library(ergm.ego)
+library(dplyr)
+library(tibble)
+library(ergm)
+```
+
+```{r}
+load("C:/Users/Alex/Downloads/Project/ICPSR_36975/DS0001/36975-0001-Data.rda")
+load("C:/Users/Alex/Downloads/Project/ICPSR_36975/DS0005/36975-0005-Data.rda")
+```
+
+```{r}
+ucnet.alters<-da36975.0001
+ucnet.egos<-da36975.0005
+write.csv(ucnet.egos, file="ucnet.ego.table.csv", row.names=FALSE)
+```
+
+```{r}
+ucnet.test<-as.egodata(ucnet.egos,alters = ucnet.alters,egoIDcol = "PRIM_KEY")
+
+```
+
