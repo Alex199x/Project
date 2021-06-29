@@ -13,22 +13,495 @@ library(ergm)
 library(ergm.ego)
 library(dplyr)
 library(tibble)
-library(ergm)
+library(tidyr)
+library(egor)
 ```
 
 ```{r}
 load("C:/Users/Alex/Downloads/Project/ICPSR_36975/DS0001/36975-0001-Data.rda")
 load("C:/Users/Alex/Downloads/Project/ICPSR_36975/DS0005/36975-0005-Data.rda")
+
+#visulasition data
+plot(table(da36975.0005$B7C_COUNT))
 ```
 
 ```{r}
-ucnet.alters<-da36975.0001
+
 ucnet.egos<-da36975.0005
-write.csv(ucnet.egos, file="ucnet.ego.table.csv", row.names=FALSE)
+egos.attribute<-names(ucnet.egos)%in%c("GENDER","YEAR_PRELOAD","PRIM_KEY","WEIGHT_W1_DEMO")
+ucnet.egos<-ucnet.egos[egos.attribute]
+
+#Calculate the age by born year (Notice that the Wave 1 was May 2015-January 2016)
+ucnet.egos$YEAR_PRELOAD<-2015-ucnet.egos$YEAR_PRELOAD
+rename(ucnet.egos,Age = YEAR_PRELOAD)
+
+#numeric Gender factor.Male=1, Female=2
+ucnet.egos$GENDER<-as.numeric(ucnet.egos$GENDER)
+
+age.na<-ucnet.egos%>%filter(is.na(YEAR_PRELOAD)==TRUE)
+ucnet.egos<-ucnet.egos%>%filter(is.na(YEAR_PRELOAD)==FALSE)
+
+#4 of egos does not have age, so we only left with 1155 egos
+
 ```
 
 ```{r}
-ucnet.test<-as.egodata(ucnet.egos,alters = ucnet.alters,egoIDcol = "PRIM_KEY")
+#Data prepare for alters
 
+
+#"C2F_NSAMEREL","C1B_NSAMESEX","C1C_NSAMEAGE","C1C_NOLDER","PRIM_KEY"
+#Since we only need above attribute, for the sake of the computation, I just keep those column.
+alters.attribute<-names(da36975.0001)%in%c("C1B_NSAMESEX","C1C_NSAMEAGE","C1C_NOLDER","PRIM_KEY","ID_W1_W2_W3","B7C","B8A")
+ucnet.alters<-da36975.0001[alters.attribute]
+
+#delete invalid data (Those 4 egos does not have attribute)
+ucnet.alters<-ucnet.alters[-which(ucnet.alters$PRIM_KEY==age.na$PRIM_KEY[1]),]
+ucnet.alters<-ucnet.alters[-which(ucnet.alters$PRIM_KEY==age.na$PRIM_KEY[2]),]
+ucnet.alters<-ucnet.alters[-which(ucnet.alters$PRIM_KEY==age.na$PRIM_KEY[3]),]
+ucnet.alters<-ucnet.alters[-which(ucnet.alters$PRIM_KEY==age.na$PRIM_KEY[4]),]
+
+#numeric Gender factor.Same as ego = 2 
+ucnet.alters$C1B_NSAMESEX<-as.numeric(ucnet.alters$C1B_NSAMESEX)
+```
+
+
+
+
+```{r}
+#Assign Gender value to alters
+
+ucnet.alters<-ucnet.alters %>%replace_na(list(C1B_NSAMESEX=3))
+
+for (i in 1:nrow(ucnet.alters)){
+  
+  if (ucnet.alters$C1B_NSAMESEX[i]==2){
+#if the sex lab of alters is "yes", then assign this alter the same gender as ego.
+      
+  ucnet.alters$C1B_NSAMESEX[i]<-ucnet.egos$GENDER[which(ucnet.egos$PRIM_KEY==ucnet.alters$PRIM_KEY[i])]
+
+  }
+  
+  else if (ucnet.alters$C1B_NSAMESEX[i]==1){
+    #If the sex lab of alters is "no", then assign this alter an opposite gender as ego.
+    #Notice, since the number 1 and 2 represent "Male","Female" successively, the "3-gender number" will give a opposite number.
+    
+  ucnet.alters$C1B_NSAMESEX[i]<-3-ucnet.egos$GENDER[which(ucnet.egos$PRIM_KEY==ucnet.alters$PRIM_KEY[i])]
+  
+  }
+  else if (ucnet.alters$C1B_NSAMESEX[i]==3) {
+    ucnet.alters$C1B_NSAMESEX[i]<-3
+  }
+    
+    
+}
+#Now, unify all the missing data to 3
+ucnet.alters$C1B_NSAMESEX[which(ucnet.alters$C1B_NSAMESEX==4)]<- 3
+
+#If we want to force data as factor "Male"/"Female" later, run this
+#ucnet.alters[which(ucnet.alters$C1B_NSAMESEX==1)]<-"Male"
+#ucnet.alters[which(ucnet.alters$C1B_NSAMESEX==2)]<-"Female"
+
+
+```
+
+```{r}
+#Assign age label to alters
+
+
+#We will record the age of alters in a new column
+#1=no, 2=yes
+ucnet.alters$C1C_NOLDER<-as.numeric(ucnet.alters$C1C_NOLDER)
+ucnet.alters$C1C_NSAMEAGE<-as.numeric(ucnet.alters$C1C_NSAMEAGE)
+
+
+#Since the "if" loop can not handle "NA" value, we will value "NA" as 3
+ucnet.alters <-ucnet.alters %>%replace_na(list(C1C_NOLDER = 3,C1C_NSAMEAGE=3))
+
+#we will asssign the alters with label"older"," younger","same age range"
+                  
+for (i in 1:nrow(ucnet.alters)){
+  if (ucnet.alters$C1C_NOLDER[i]==2){
+    #if the logic of C1C_NOLDER=yes
+    ucnet.alters$Age[i]<-'older'
+  }
+  else {
+    if (ucnet.alters$C1C_NSAMEAGE[i]==2){
+      #if the logic of C1C_NOLDER=No or NA, and the logic of C1C_NSAMEAGE=yes
+      ucnet.alters$Age[i]<-'younger'
+    }
+    else if (ucnet.alters$C1C_NSAMEAGE[i]==1) {
+      ucnet.alters$Age[i]<-'same'
+    }
+    else if (ucnet.alters$C1C_NSAMEAGE[i]==3){
+      ucnet.alters$Age[i]<-3
+    }
+  }
+}
+```
+
+
+```{r}
+#Assign age value to alters
+
+
+#We will record the age of alters in a new column
+#1=no, 2=yes
+ucnet.alters$C1C_NOLDER<-as.numeric(ucnet.alters$C1C_NOLDER)
+ucnet.alters$C1C_NSAMEAGE<-as.numeric(ucnet.alters$C1C_NSAMEAGE)
+
+
+#Since the "if" loop can not handle "NA" value, we will value "NA" as 3
+ucnet.alters <-ucnet.alters %>%replace_na(list(C1C_NOLDER = 3,C1C_NSAMEAGE=3))
+
+
+                  
+for (i in 1:nrow(ucnet.alters)){
+  if (ucnet.alters$C1C_NOLDER[i]==2){
+    #if the logic of C1C_NOLDER=yes
+    ucnet.alters$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters$PRIM_KEY[i])]+6
+  }
+  else {
+    if (ucnet.alters$C1C_NSAMEAGE[i]==2){
+      #if the logic of C1C_NOLDER=No or NA, and the logic of C1C_NSAMEAGE=yes
+      ucnet.alters$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters$PRIM_KEY[i])]
+    }
+    else if (ucnet.alters$C1C_NSAMEAGE[i]==1) {
+      ucnet.alters$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters$PRIM_KEY[i])]-6
+    }
+    else if (ucnet.alters$C1C_NSAMEAGE[i]==3){
+      ucnet.alters$Age[i]<-3
+    }
+  }
+}
+```    
+  
+```{r}
+
+#Rearrange the data frame before transfer to egor data frame
+ucnet.alters<-ucnet.alters%>%rename(GENDER=C1B_NSAMESEX)
+alters.id<-ucnet.alters["ID_W1_W2_W3"]
+ucnet.alters<-ucnet.alters[c("PRIM_KEY","Age","GENDER","B7C","B8A")]
+ucnet.alters<-ucnet.alters%>%rename(indegree=B7C,outdegree=B8A)
+ucnet.egos<-ucnet.egos%>%rename(Age=YEAR_PRELOAD)
+
+#convert tie column to logical
+ucnet.alters$indegree<-as.logical(ucnet.alters$indegree)
+ucnet.alters$outdegree<-as.logical(ucnet.alters$outdegree)
+ucnet.alters$indegree[is.na(ucnet.alters$indegree)==TRUE]<-FALSE
+ucnet.alters$outdegree[is.na(ucnet.alters$outdegree)==TRUE]<-FALSE
+```
+
+
+```{r}
+#Create an egor object
+ucnet.egor<-egor(ucnet.alters,ucnet.egos,ID.vars = list(ego="PRIM_KEY"))
+
+
+#Construct network 
+ucnet.network<-template_network(ucnet.egor,N=nrow(ucnet.egos))
+ucnet.network %n% "directed" <- TRUE
+```
+
+
+
+
+
+
+
+#Model Specification
+
+#First fit an ERGM to the complete network
+
+```{r}
+#statistic term
+in.row<-ucnet.alters%>%filter(ucnet.alters$indegree==TRUE)
+out.row<-ucnet.alters%>%filter(ucnet.alters$outdegree==TRUE)
+for (i in 1:nrow(in.row)) {
+ in.row$ego.gender[i]<-ucnet.egos$GENDER[which(ucnet.egos$PRIM_KEY==in.row$PRIM_KEY[i])]
+ in.row$ego.age[i]<-ucnet.egos$Age[which(ucnet.egos$PRIM_KEY==in.row$PRIM_KEY[i])]
+}
+
+
+for (j in 1:nrow(out.row)) {
+ out.row$ego.gender[j]<-ucnet.egos$GENDER[which(ucnet.egos$PRIM_KEY==out.row$PRIM_KEY[j])]
+ out.row$ego.age[j]<-ucnet.egos$Age[which(ucnet.egos$PRIM_KEY==out.row$PRIM_KEY[j])]
+}
+
+#edge
+uc.edges<-sum(ucnet.alters$indegree)+sum(ucnet.alters$outdegree)
+
+
+#nodefactor--Gender(both in and out)
+
+##nodeifactor.male: the number of times a node with Gender-male appears as the terminal node of a directed tie. AKA, the number of nominated "male" alters who egos want to help + the number of 'male' egos who alters will help with.
+
+nodeifactor.male<-nrow(in.row%>%filter(ego.gender==1)) + nrow(out.row%>%filter(GENDER==1))
+
+##nodeofactor.male: the number of times a node with Gender-male appears as the origin node of a directed tie.
+
+nodeofactor.male<-nrow(in.row%>%filter(GENDER==1))+nrow(out.row%>%filter(ego.gender==1))
+
+
+#nodematch-Gender (not using yet)
+#homophily.in<-nrow(in.row%>%filter(in.row$GENDER==in.row$ego.gender))
+#homophily.out<-nrow(out.row%>%filter(out.row$GENDER==out.row$ego.gender))
+#nodematch<-nrow(as.data.frame(homophily.in$.egoID))+homophily.out
+
+
+#Reciprocal
+Reciprocal<-nrow(in.row%>%filter(in.row$outdegree==TRUE))
+
+#F(~edges + nodeocov("age") + nodeicov("age"), ~diff("age")>6)
+##F~edges,the number of edges(i,j) for which attr(i,age)>=attr(j,age)
+f.in.row<-in.row%>%filter(Age=="older")
+f.out.row<-out.row%>%filter(Age=="younger")
+f.edges<-nrow(f.in.row)+nrow(f.out.row)
+
+##F~nodeicov("age"), This term equal to the total value of attr(j,age) for all edges(i,j) in the network. However, we do not know the age of alters, We will only sum up the age attribute of egos.
+f.nodeicov<-sum(f.in.row$ego.age)
+##F~nodeocov("age")
+f.nodeocov<-sum(f.out.row$ego.age)
+
+
+#nodeocov("age")
+nodeocov<-sum(out.row$ego.age)
+#nodeicov("age")
+nodeicov<-sum(in.row$ego.age)
+
+```
+
+```{r}
+fit.01<-ergm(ucnet.network~
+                   edges+nodeifactor('GENDER')+mutual
+                 
+                 +F(~edges + nodeocov("Age") + nodeicov("Age"), ~diff("Age"))
+                 
+                 +nodeocov("Age") + nodeicov("Age"),
+                  
+                 
+                 constraints = ~bd(maxout=6) + blocks(~Age%in%32-49, levels2=3),
+
+                 target.stats=c(uc.edges,nodeifactor.male,Reciprocal,f.edges,f.nodeocov,f.nodeicov,nodeocov,nodeicov),
+                 control=control.ergm(MCMLE.maxit = 1))
+summary(fit.01)
+
+plot(gof(fit.01))
+
+```
+
+
+
+
+
+#Second, we will draw 1000 independent egocentric sampled size 550,which is half of the size of the complete network
+
+```{r}
+set.seed(1)
+ucnet.egor$WEIGHT_W1_DEMO<-ucnet.egor$WEIGHT_W1_DEMO/sum(ucnet.egor$WEIGHT_W1_DEMO)
+
+ucnet.sample<-sample(ucnet.egor,550,replace = F,prob = ucnet.egor$ego$WEIGHT_W1_DEMO)
+
+ucnet.sample.network<-template_network(ucnet.sample,N=550)
+ucnet.sample.network %n% "directed" <- TRUE
+```
+
+
+# Third, to each egocentric sample we will fit an egocentric ERGM having the same terms as the complete network model.
+
+
+```{r}
+sample.ego <-as.data.frame(ucnet.sample$ego)
+sample.alter <-as.data.frame(ucnet.sample$alter)
+
+
+sample.in.row<-sample.alter%>%filter(sample.alter$indegree==TRUE)
+sample.out.row<-sample.alter%>%filter(sample.alter$outdegree==TRUE)
+
+for (b in 1:nrow(sample.in.row)) {
+ sample.in.row$ego.gender[b]<-sample.ego$GENDER[which(sample.ego$.egoID==sample.in.row$.egoID[b])]
+ sample.in.row$ego.age[b]<-sample.ego$Age[which(sample.ego$.egoID==sample.in.row$.egoID[b])]
+}
+
+
+for (c in 1:nrow(sample.out.row)) {
+ sample.out.row$ego.gender[c]<-sample.ego$GENDER[which(sample.ego$.egoID==sample.out.row$.egoID[c])]
+ sample.out.row$ego.age[c]<-sample.ego$Age[which(sample.ego$.egoID==sample.out.row$.egoID[c])]
+}
+
+#edge
+sample.edges<-sum(ucnet.sample$alter$indegree)+sum(ucnet.sample$alter$outdegree)
+
+#nodefactor--Gender(both in and out)
+
+##nodeifactor.male: the number of times a node with Gender-male appears as the terminal node of a directed tie. AKA, the number of nominated "male" alters who egos want to help + the number of 'male' egos who alters will help with.
+
+sample.nodeifactor.male<-nrow(sample.in.row%>%filter(ego.gender==1)) + nrow(sample.out.row%>%filter(GENDER==1))
+
+##nodeofactor.male: the number of times a node with Gender-male appears as the origin node of a directed tie.
+
+sample.nodeofactor.male<-nrow(sample.in.row%>%filter(GENDER==1))+nrow(sample.out.row%>%filter(ego.gender==1))
+
+
+#nodematch-Gender(not using yet)
+#sample.homophily.in<-sample.in.row%>%filter(sample.in.row$GENDER==sample.in.row$ego.gender)
+#sample.homophily.out<-nrow(sample.out.row%>%filter(sample.out.row$GENDER==sample.out.row$ego.gender))
+#sample.nodematch<-nrow(distinct(as.data.frame(sample.homophily.in$.egoID)))+sample.homophily.out
+
+
+#Reciprocal
+sample.Reciprocal<-nrow(sample.in.row%>%filter(outdegree==TRUE))
+
+#F(~edges + nodeocov("age") + nodeicov("age"), ~diff("age")>6)
+##F~edges
+sample.f.in.row<-sample.in.row%>%filter(Age=="older")
+sample.f.out.row<-sample.out.row%>%filter(Age=="younger")
+sample.f.edges<-nrow(sample.f.in.row)+nrow(sample.f.out.row)
+
+##F~nodeicov("age")
+sample.f.nodeicov<-sum(sample.f.in.row$ego.age)
+
+##F~nodeocov("age")
+sample.f.nodeocov<-sum(sample.f.out.row$ego.age)
+
+
+#nodeocov("age")
+sample.nodeocov<-sum(sample.out.row$ego.age)
+#nodeicov("age")
+sample.nodeicov<-sum(sample.in.row$ego.age)
+
+
+```
+
+
+```{r}
+fit.sample<-ergm(ucnet.sample.network~
+                   edges+nodeifactor('GENDER')+mutual
+                 
+                 +F(~edges + nodeocov("Age") + nodeicov("Age"), ~diff("Age"))
+                 
+                 +nodeocov("Age") + nodeicov("Age")
+                   
+                 +offset(edges)+offset(mutual),
+                 
+                 offset.coef = c(-log(550),log(550)),
+                 
+                 constraints = ~bd(maxout=6) + blocks(~Age%in%37:57, levels2=3),
+
+                 target.stats=c(sample.edges,sample.nodeifactor.male,sample.Reciprocal,sample.f.edges,sample.f.nodeocov,sample.f.nodeocov,sample.nodeocov,sample.nodeicov),
+                 control=control.ergm(MCMLE.maxit = 1))
+
+
+summary(fit.sample)
+```
+
+
+
+
+#https://eehh-stanford.github.io/SNA-workshop/ergm-intro.html
+
+```{r}
+plot(table(ucnet.alters$Age))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{}
+
+#Delete data that B7C and B8A are both NA ,in ucnet.alters, since those nodes do not have ties.
+#both.na<-subset(da36975.0001,is.na(da36975.0001$B7C)==TRUE & is.na(da36975.0001$B8A)==TRUE)
+#row.na<-as.numeric(row.names(both.na))
+#ucnet.alters<-da36975.0001[-row.na,]
+#NO.tie==6164
+
+
+```
+
+
+```{}
+#Data prepare for egos
+
+#Extract the ego$ID that we are interest from alters data
+#ego.id<-distinct(as.data.frame(ucnet.alters$PRIM_KEY))
+#ego.id==1148, which means there is 1159-1148=11 person did not answer B7C B8A.
+
+a<-c()
+for (i in 1:1159 ){
+  
+  if (sum(da36975.0005$PRIM_KEY[i]==ego.id)==1)
+  {
+  a<-rbind(a,i)
+
+  }
+}
+ucnet.egos<-da36975.0005[a,]
+```
+
+```{}
+#Assign age value to alters
+
+
+#We will record the age of alters in a new column
+#1=no, 2=yes
+ucnet.alters.simple$C1C_NOLDER<-as.numeric(ucnet.alters.simple$C1C_NOLDER)
+ucnet.alters.simple$C1C_NSAMEAGE<-as.numeric(ucnet.alters.simple$C1C_NSAMEAGE)
+
+
+#Since the "if" loop can not handle "NA" value, we will value "NA" as 3
+ucnet.alters.simple <-ucnet.alters.simple %>%replace_na(list(C1C_NOLDER = 3,C1C_NSAMEAGE=3))
+#Delete data that C1C_NSAMEAGE and C1C_NOLDER are NA
+both.age.na<-subset(ucnet.alters.simple,ucnet.alters.simple$C1C_NSAMEAGE==3 & ucnet.alters.simple$C1C_NOLDER==3)
+row.age.na<-as.numeric(row.names(both.age.na))
+ucnet.alters.simple<-ucnet.alters.simple[-row.age.na,]
+#NO.alter=5492
+
+
+                  
+for (i in 1:nrow(ucnet.alters.simple)){
+  if (ucnet.alters.simple$C1C_NOLDER[i]==2){
+    #if the logic of C1C_NOLDER=yes
+    ucnet.alters.simple$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters.simple$PRIM_KEY[i])]+6
+  }
+  else {
+    if (ucnet.alters.simple$C1C_NSAMEAGE[i]==2){
+      #if the logic of C1C_NOLDER=No or NA, and the logic of C1C_NSAMEAGE=yes
+      ucnet.alters.simple$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters.simple$PRIM_KEY[i])]
+    }
+    else {
+      ucnet.alters.simple$Age[i]<-ucnet.egos$YEAR_PRELOAD[which(ucnet.egos$PRIM_KEY==ucnet.alters.simple$PRIM_KEY[i])]-6
+    }
+  }
+}
+```
+
+
+```{r}
+drop the invalid alters ,i.e. respondent nominated an alter but did not report any attributes.
+
+ucnet.alters<- ucnet.alters%>%filter(ucnet.alters$C1B_NSAMESEX!=3,ucnet.alters$C1C_NSAMEAGE!=3)
 ```
 
